@@ -139,7 +139,7 @@
     const session = {
       id: Date.now().toString(),
       side: selectedSide,
-      startTime: new Date(timerStart).toISOString(),
+      startTime: new Date(Date.now() - durationSec * 1000).toISOString(),
       endTime: new Date().toISOString(),
       durationSec,
     };
@@ -216,7 +216,7 @@
       const date = fmtDate(s.startTime);
       if (date !== currentDate) {
         currentDate = date;
-        html += `<div style="font-size:0.8rem;color:#999;font-weight:600;margin-top:12px;margin-bottom:4px;">${date}</div>`;
+        html += `<div style="font-size:0.75rem;color:#5a5a68;font-weight:600;margin-top:14px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">${date}</div>`;
       }
 
       let gapHtml = "";
@@ -336,9 +336,9 @@
     // Side balance
     html += `<div class="stat-card">
       <h3>Side Balance (7 days)</h3>
-      <div style="display:flex;gap:8px;align-items:center;margin-top:8px;">
-        <div style="flex:${leftCount || 1};height:24px;background:#c27ba0;border-radius:6px 0 0 6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.75rem;font-weight:600;">L: ${leftCount}</div>
-        <div style="flex:${rightCount || 1};height:24px;background:#7baac2;border-radius:0 6px 6px 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.75rem;font-weight:600;">R: ${rightCount}</div>
+      <div style="display:flex;gap:4px;align-items:center;margin-top:10px;">
+        <div style="flex:${leftCount || 1};height:28px;background:#d48cb3;border-radius:8px 0 0 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:600;letter-spacing:0.5px;">L: ${leftCount}</div>
+        <div style="flex:${rightCount || 1};height:28px;background:#7bb8d4;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:600;letter-spacing:0.5px;">R: ${rightCount}</div>
       </div>
       <div class="stat-detail">${total7 > 0 ? Math.round((leftCount / total7) * 100) : 0}% left / ${total7 > 0 ? Math.round((rightCount / total7) * 100) : 0}% right</div>
     </div>`;
