@@ -144,6 +144,10 @@ header h1 {
   transform: none;
 }
 
+.primary-btn.pause {
+  background: #e6a535;
+}
+
 .primary-btn.danger {
   background: #d4645c;
 }
@@ -153,6 +157,25 @@ header h1 {
   color: #888;
   font-size: 0.85rem;
   min-height: 1.2em;
+}
+
+.last-side-hint {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  min-height: 1.4em;
+}
+
+.last-side-hint .hint-left { color: #c27ba0; }
+.last-side-hint .hint-right { color: #7baac2; }
+
+.timer-display.paused #timer-text {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0.3; }
 }
 
 /* History */

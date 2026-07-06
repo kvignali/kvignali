@@ -8,12 +8,17 @@
   let selectedSide = null;
   let timerStart = null;
   let timerInterval = null;
+  let paused = false;
+  let elapsedBeforePause = 0;
 
   // --- DOM refs ---
   const timerText = document.getElementById("timer-text");
+  const timerDisplay = document.querySelector(".timer-display");
   const startBtn = document.getElementById("start-btn");
+  const pauseBtn = document.getElementById("pause-btn");
   const stopBtn = document.getElementById("stop-btn");
   const lastFeedingEl = document.getElementById("last-feeding");
+  const lastSideHint = document.getElementById("last-side-hint");
   const historyList = document.getElementById("history-list");
   const clearHistoryBtn = document.getElementById("clear-history");
   const patternsContent = document.getElementById("patterns-content");
@@ -78,17 +83,20 @@
   });
 
   // --- Timer ---
+  function getElapsed() {
+    if (!timerStart) return elapsedBeforePause;
+    return elapsedBeforePause + Math.floor((Date.now() - timerStart) / 1000);
+  }
+
   function updateTimer() {
-    if (!timerStart) return;
-    const elapsed = Math.floor((Date.now() - timerStart) / 1000);
-    timerText.textContent = fmtDuration(elapsed);
+    timerText.textContent = fmtDuration(getElapsed());
   }
 
   startBtn.addEventListener("click", () => {
     if (!selectedSide) {
       sideBtns.forEach((b) => {
         b.style.animation = "none";
-        b.offsetHeight; // trigger reflow
+        b.offsetHeight;
         b.style.animation = "";
         b.style.border = "3px solid #d4645c";
         setTimeout(() => (b.style.border = ""), 1000);
@@ -96,16 +104,37 @@
       return;
     }
     timerStart = Date.now();
+    paused = false;
+    elapsedBeforePause = 0;
+    timerDisplay.classList.remove("paused");
     timerInterval = setInterval(updateTimer, 1000);
     startBtn.disabled = true;
+    pauseBtn.disabled = false;
     stopBtn.disabled = false;
     sideBtns.forEach((b) => (b.disabled = true));
   });
 
+  pauseBtn.addEventListener("click", () => {
+    if (paused) {
+      // Resume
+      timerStart = Date.now();
+      timerDisplay.classList.remove("paused");
+      timerInterval = setInterval(updateTimer, 1000);
+      pauseBtn.textContent = "Pause";
+    } else {
+      // Pause
+      elapsedBeforePause = getElapsed();
+      timerStart = null;
+      clearInterval(timerInterval);
+      timerDisplay.classList.add("paused");
+      pauseBtn.textContent = "Resume";
+    }
+    paused = !paused;
+  });
+
   stopBtn.addEventListener("click", () => {
-    if (!timerStart) return;
     clearInterval(timerInterval);
-    const durationSec = Math.floor((Date.now() - timerStart) / 1000);
+    const durationSec = getElapsed();
 
     const session = {
       id: Date.now().toString(),
@@ -120,8 +149,13 @@
 
     // Reset
     timerStart = null;
+    paused = false;
+    elapsedBeforePause = 0;
+    timerDisplay.classList.remove("paused");
     timerText.textContent = "00:00";
     startBtn.disabled = false;
+    pauseBtn.disabled = true;
+    pauseBtn.textContent = "Pause";
     stopBtn.disabled = true;
     sideBtns.forEach((b) => {
       b.disabled = false;
@@ -130,7 +164,21 @@
     selectedSide = null;
 
     updateLastFeeding();
+    updateLastSideHint();
   });
+
+  // --- Last side hint ---
+  function updateLastSideHint() {
+    if (sessions.length === 0) {
+      lastSideHint.innerHTML = "";
+      return;
+    }
+    const last = sessions[0];
+    const opposite = last.side === "left" ? "right" : "left";
+    lastSideHint.innerHTML = `Last side: <span class="hint-${last.side}">${last.side}</span> → Try <span class="hint-${opposite}">${opposite}</span> next`;
+  }
+
+  updateLastSideHint();
 
   // --- Last feeding ---
   function updateLastFeeding() {
@@ -201,6 +249,7 @@
         save();
         renderHistory();
         updateLastFeeding();
+        updateLastSideHint();
       });
     });
   }
@@ -212,6 +261,7 @@
       save();
       renderHistory();
       updateLastFeeding();
+      updateLastSideHint();
     }
   });
 
