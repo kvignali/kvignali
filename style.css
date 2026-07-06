@@ -101,6 +101,10 @@ header h1 {
   background: #f0f5fd;
 }
 
+.side-btn.error-flash {
+  border-color: #d4645c !important;
+}
+
 /* Timer */
 .timer-display {
   text-align: center;
