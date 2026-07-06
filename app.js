@@ -95,11 +95,8 @@
   startBtn.addEventListener("click", () => {
     if (!selectedSide) {
       sideBtns.forEach((b) => {
-        b.style.animation = "none";
-        b.offsetHeight;
-        b.style.animation = "";
-        b.style.border = "3px solid #d4645c";
-        setTimeout(() => (b.style.border = ""), 1000);
+        b.style.borderColor = "oklch(0.56 0.18 25)";
+        setTimeout(() => (b.style.borderColor = ""), 800);
       });
       return;
     }
@@ -216,7 +213,7 @@
       const date = fmtDate(s.startTime);
       if (date !== currentDate) {
         currentDate = date;
-        html += `<div style="font-size:0.75rem;color:#5a5a68;font-weight:600;margin-top:14px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">${date}</div>`;
+        html += `<div class="date-divider">${date}</div>`;
       }
 
       let gapHtml = "";
@@ -233,7 +230,7 @@
             <span class="side-label ${s.side}">${s.side.charAt(0).toUpperCase() + s.side.slice(1)}</span>
             <span class="time-info">${fmtTime(s.startTime)} — ${fmtTime(s.endTime)}</span>
           </div>
-          <div style="text-align:right">
+          <div class="duration-col">
             <div class="duration">${fmtDuration(s.durationSec)}</div>
             ${gapHtml}
           </div>
@@ -336,9 +333,9 @@
     // Side balance
     html += `<div class="stat-card">
       <h3>Side Balance (7 days)</h3>
-      <div style="display:flex;gap:4px;align-items:center;margin-top:10px;">
-        <div style="flex:${leftCount || 1};height:28px;background:#d48cb3;border-radius:8px 0 0 8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:600;letter-spacing:0.5px;">L: ${leftCount}</div>
-        <div style="flex:${rightCount || 1};height:28px;background:#7bb8d4;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.7rem;font-weight:600;letter-spacing:0.5px;">R: ${rightCount}</div>
+      <div class="balance-bar">
+        <div class="balance-segment left" style="flex:${leftCount || 1}">L: ${leftCount}</div>
+        <div class="balance-segment right" style="flex:${rightCount || 1}">R: ${rightCount}</div>
       </div>
       <div class="stat-detail">${total7 > 0 ? Math.round((leftCount / total7) * 100) : 0}% left / ${total7 > 0 ? Math.round((rightCount / total7) * 100) : 0}% right</div>
     </div>`;
