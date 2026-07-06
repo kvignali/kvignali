@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feeding Tracker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>🍼 Feeding Tracker</h1>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="timer">Timer</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="patterns">Patterns</button>
+    </nav>
+
+    <!-- Timer Tab -->
+    <section id="timer" class="tab-content active">
+      <div class="side-picker">
+        <button class="side-btn left" data-side="left">Left</button>
+        <button class="side-btn right" data-side="right">Right</button>
+      </div>
+      <div class="timer-display">
+        <span id="timer-text">00:00</span>
+      </div>
+      <div class="timer-controls">
+        <button id="start-btn" class="primary-btn">Start</button>
+        <button id="stop-btn" class="primary-btn danger" disabled>Stop & Save</button>
+      </div>
+      <p id="last-feeding" class="last-feeding"></p>
+    </section>
+
+    <!-- History Tab -->
+    <section id="history" class="tab-content">
+      <div class="history-header">
+        <h2>Session History</h2>
+        <button id="clear-history" class="text-btn">Clear All</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+    </section>
+
+    <!-- Patterns Tab -->
+    <section id="patterns" class="tab-content">
+      <h2>Feeding Patterns</h2>
+      <div id="patterns-content" class="patterns-content"></div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
