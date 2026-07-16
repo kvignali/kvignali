@@ -11,7 +11,6 @@
 
   // --- DOM refs ---
   const timerText = document.getElementById("timer-text");
-  const startBtn = document.getElementById("start-btn");
   const stopBtn = document.getElementById("stop-btn");
   const lastFeedingEl = document.getElementById("last-feeding");
   const historyList = document.getElementById("history-list");
@@ -68,12 +67,19 @@
     });
   });
 
-  // --- Side picker ---
+  // --- Side picker (also starts the timer) ---
   sideBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
+      if (timerStart) return; // a feeding is already in progress
+
       sideBtns.forEach((b) => b.classList.remove("selected"));
       btn.classList.add("selected");
       selectedSide = btn.dataset.side;
+
+      timerStart = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+      stopBtn.disabled = false;
+      sideBtns.forEach((b) => (b.disabled = true));
     });
   });
 
@@ -83,24 +89,6 @@
     const elapsed = Math.floor((Date.now() - timerStart) / 1000);
     timerText.textContent = fmtDuration(elapsed);
   }
-
-  startBtn.addEventListener("click", () => {
-    if (!selectedSide) {
-      sideBtns.forEach((b) => {
-        b.style.animation = "none";
-        b.offsetHeight; // trigger reflow
-        b.style.animation = "";
-        b.style.border = "3px solid #d4645c";
-        setTimeout(() => (b.style.border = ""), 1000);
-      });
-      return;
-    }
-    timerStart = Date.now();
-    timerInterval = setInterval(updateTimer, 1000);
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-    sideBtns.forEach((b) => (b.disabled = true));
-  });
 
   stopBtn.addEventListener("click", () => {
     if (!timerStart) return;
@@ -121,7 +109,6 @@
     // Reset
     timerStart = null;
     timerText.textContent = "00:00";
-    startBtn.disabled = false;
     stopBtn.disabled = true;
     sideBtns.forEach((b) => {
       b.disabled = false;
